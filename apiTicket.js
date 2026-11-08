@@ -1,5 +1,5 @@
 // Eventos desde la API de Ticketmaster 
-const API_KEY = "6mq8s7MWBD4rGnA2LXipm3TGogTsFy6f";
+// La API_KEY viene de config.js (que se carga antes en el index.html y no se sube a GitHub)
 
 // Pide los eventos a la API y devuelve un arreglo (vacío si no hay)
 async function buscarEventos(keyword, countryCode = "US") {
@@ -17,8 +17,59 @@ async function buscarEventos(keyword, countryCode = "US") {
   return data._embedded?.events ?? [];
 }
 
+// Convierte un evento de Ticketmaster en un objeto sencillo con solo lo que usamos.
+// Así la tarjeta se puede crear igual con datos de la API o con datos guardados en localStorage.
+function datosDelEvento(e) {
+  const lugar = e._embedded?.venues?.[0]?.name ?? "Lugar por confirmar";
+  const rango = e.priceRanges?.[0];
+  const textoPrecio = rango ? `Desde ${rango.min} ${rango.currency}` : "Sin precio disponible";
+
+  return {
+    id: e.id,
+    titulo: e.name,
+    fecha: e.dates.start.localDate,
+    descripcion: `${e.dates.start.localDate} · ${lugar} · ${textoPrecio}`,
+    url: e.url ?? ""
+  };
+}
+
+// Crea la tarjeta (el <li>) a partir de ese objeto sencillo.
+// Se usa textContent (no innerHTML) porque los datos vienen de afuera (evita XSS).
+function crearTarjeta(datos) {
+  const li = document.createElement("li");
+  li.className = "tarjeta";
+  li.dataset.id = datos.id;
+  li.dataset.fecha = datos.fecha; // se usa para la regla del choque de fechas
+
+  // Agarradera: solo se arrastra desde aquí
+  const asa = document.createElement("span");
+  asa.className = "asa";
+  asa.textContent = "⠿";
+
+  const titulo = document.createElement("h3");
+  titulo.textContent = datos.titulo;
+
+  const descripcion = document.createElement("p");
+  descripcion.textContent = datos.descripcion;
+
+  const contenido = document.createElement("div");
+  contenido.append(titulo, descripcion);
+
+  // Enlace al evento en Ticketmaster (se abre en otra pestaña)
+  if (datos.url) {
+    const enlace = document.createElement("a");
+    enlace.href = datos.url;
+    enlace.target = "_blank";
+    enlace.rel = "noopener";
+    enlace.textContent = "Ver evento";
+    contenido.append(enlace);
+  }
+
+  li.append(asa, contenido);
+  return li;
+}
+
 // Busca los eventos de la palabra que se le pase y los muestra como tarjetas.
-// Si no se le pasa nada, busca "music" (es lo que sale al abrir la página).
 async function mostrarEventos(palabra = "music") {
   const lista = document.getElementById("eventos");
   const estado = document.getElementById("estadoEventos");
@@ -36,46 +87,9 @@ async function mostrarEventos(palabra = "music") {
 
     let agregados = 0;
 
-    // Por cada evento se crea una tarjeta con título y descripción.
-    // Se usa textContent (no innerHTML) porque los datos vienen de afuera (evita XSS).
     eventos.forEach((e) => {
       if (yaElegidos.includes(e.id)) return; // ya está en Interesados: se salta
-
-      const li = document.createElement("li");
-      li.className = "tarjeta";
-      li.dataset.id = e.id;
-
-      // Agarradera: solo se arrastra desde aquí
-      const asa = document.createElement("span");
-      asa.className = "asa";
-      asa.textContent = "⠿";
-
-      const titulo = document.createElement("h3");
-      titulo.textContent = e.name;
-
-      // Descripción: fecha, lugar y precio (si existen)
-      const lugar = e._embedded?.venues?.[0]?.name ?? "Lugar por confirmar";
-      const rango = e.priceRanges?.[0];
-      const textoPrecio = rango ? `Desde ${rango.min} ${rango.currency}` : "Sin precio disponible";
-
-      const descripcion = document.createElement("p");
-      descripcion.textContent = `${e.dates.start.localDate} · ${lugar} · ${textoPrecio}`;
-
-      const contenido = document.createElement("div");
-      contenido.append(titulo, descripcion);
-
-      // Enlace al evento en Ticketmaster (se abre en otra pestaña)
-      if (e.url) {
-        const enlace = document.createElement("a");
-        enlace.href = e.url;
-        enlace.target = "_blank";
-        enlace.rel = "noopener";
-        enlace.textContent = "Ver evento";
-        contenido.append(enlace);
-      }
-
-      li.append(asa, contenido);
-      lista.appendChild(li);   // se agrega la tarjeta a la lista "Eventos"
+      lista.appendChild(crearTarjeta(datosDelEvento(e)));
       agregados++;
     });
 

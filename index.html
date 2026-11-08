@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel de eventos - Grupo 3</title>
   <link rel="stylesheet" href="estilos.css">
+  <!-- La librería de drag & drop va ANTES de nuestros scripts -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 </head>
 <body>
@@ -30,12 +31,18 @@
         <h2>Eventos</h2>
         <span class="contador" id="contadorEventos">0</span>
       </div>
-      <!-- Buscador: escribe una palabra y busca esos eventos en Ticketmaster -->
-      <form id="formBuscar" class="buscador">
-        <input id="inputBuscar" type="search" placeholder="Ej: rock, football, theater" required>
+
+      <form id="formBuscar" class="buscador" novalidate>
+        <input id="inputBuscar" name="busqueda" type="search"
+               placeholder="Ej: rock, football, theater"
+               required minlength="3" maxlength="30"
+               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü ]+"
+               aria-describedby="errorBusqueda">
         <button type="submit">Buscar</button>
       </form>
-      <!-- Mensajes de carga o error (fuera de la lista para que no se puedan arrastrar) -->
+      <p class="error-busqueda" id="errorBusqueda" aria-live="polite"></p>
+
+      <!-- Mensajes de carga o error -->
       <p class="estado" id="estadoEventos" role="status">Cargando eventos...</p>
       <ul class="lista" id="eventos"></ul>
     </section>
@@ -43,10 +50,11 @@
     <section class="panel panel-interesados">
       <div class="panel-cabecera">
         <h2>Interesados</h2>
-        <span class="contador" id="contadorInteresados">0</span>
+        <span class="contador" id="contadorInteresados">0/7</span>
       </div>
-      <p class="estado">Arrastra desde el ⠿ los eventos que te interesan.</p>
+      <p class="estado">Arrastra desde el ⠿ hasta 7 eventos. Se guardan aunque cierres la página.</p>
       <ul class="lista" id="interesados"></ul>
+      <button class="boton-secundario" id="btnVaciar" type="button">Vaciar interesados</button>
     </section>
 
     <aside class="panel panel-grafica">
@@ -58,6 +66,7 @@
 
   </main>
 
+  <script src="config.js"></script>
   <script src="ubicacion.js"></script>
   <script src="canvas.js"></script>
   <script src="apiTicket.js"></script>

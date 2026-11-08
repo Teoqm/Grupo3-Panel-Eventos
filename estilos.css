@@ -8,6 +8,7 @@
 
   --tinta: #2b2650;
   --tinta-suave: #5b567d;
+  --alerta: #9f1239;       /* errores y reglas que se incumplen */
 }
 
 /* Base  */
@@ -44,6 +45,18 @@ button {
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+}
+
+/* Botón claro para acciones secundarias (Vaciar interesados) */
+.boton-secundario {
+  background-color: transparent;
+  color: var(--tinta);
+  border: 1px solid var(--lavanda);
+  margin-top: 0.75rem;
+
+  &:hover {
+    background-color: var(--lila-claro);
   }
 }
 
@@ -146,6 +159,7 @@ button {
 /* Panel Interesados: cambia el borde, el contador y la lista */
 .panel-interesados {
   border-top-color: var(--lavanda);
+  transition: box-shadow 0.2s;
 
   & .contador {
     background-color: var(--lavanda);
@@ -155,6 +169,15 @@ button {
     border: 2px dashed var(--lavanda);
     border-radius: 10px;
     padding: 0.5rem;
+  }
+
+  /* Cuando está lleno y se intenta soltar otro, se pone rojo 1 segundo */
+  &.lleno {
+    box-shadow: 0 0 0 3px var(--alerta);
+
+    & .lista {
+      border-color: var(--alerta);
+    }
   }
 }
 
@@ -170,7 +193,7 @@ button {
 .buscador {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
 
   & input { 
     flex: 1; /* el input ocupa todo el espacio que sobra */
@@ -178,7 +201,20 @@ button {
     border: 1px solid var(--gris);
     border-radius: 6px;
     font: inherit;
+
+    /* Borde rojo solo después de que el usuario escribió o intentó buscar */
+    &:user-invalid {
+      border: 2px solid var(--alerta);
+    }
   }
+}
+
+/* Mensaje de error del buscador */
+.error-busqueda {
+  color: var(--alerta);
+  font-size: 0.85rem;
+  min-height: 1.2em;
+  margin-bottom: 0.25rem;
 }
 
 /* Mensajes de carga o error */
@@ -236,6 +272,19 @@ button {
   #interesados & {
     border-left-color: var(--lavanda);
     background-color: #f2effc;
+
+    /* Dos eventos el mismo día */
+    &.choque {
+      border-left-color: var(--alerta);
+
+      & h3::after {
+        content: "Mismo día que otro evento";
+        display: block;
+        font-size: 0.75rem;
+        font-weight: normal;
+        color: var(--alerta);
+      }
+    }
   }
 }
 
