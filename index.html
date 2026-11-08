@@ -3,8 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
   <title>Prueba Módulo Ubicación - Mateo</title>
   <style>
+    .tablero { display: flex; gap: 16px; flex-wrap: wrap;   }
+    .columna { background: #ddd; border-radius: 8px; padding: 10px; width: 220px; }
+    .columna h3 { margin: 0 0 8px; font-size: 1rem; }
+    .lista { list-style: none; padding: 0; margin: 0; min-height: 80px; }
+    .lista li { background: white; padding: 10px; margin-bottom: 6px;  border-radius: 6px; cursor: grab; }  
+    .fantasma { opacity: 0.4; background: #c8e6c9; }
+    .elegida { box-shadow: 0 6px 14px rgba(0,0,0,0.3); }
+    .asa { cursor: grab; color: #999; margin-right: 8px; }
     body {
       font-family: system-ui, sans-serif;
       background-color: #f4f6f9;
@@ -37,9 +46,29 @@
     <p>Haz clic para obtener la ubicación en tiempo real:</p>
     <button id="btnUbicacion">Obtener Mi Ubicación</button>
     <p id="textoUbicacion">Esperando interacción...</p>
+    <ul id="listaEventos"></ul>
+  
+  
+  </div>
+  <div class="tablero">
+    
+    <div class="columna">
+
+        <h3>Eventos</h3>
+        <ul class="lista" id="Eventos">
+            
+        </ul>
+
+    </div>
+    <div class="columna" >
+        <h3>Interesado</h3>
+        <ul class="lista" id="interesado">
+            
+        </ul>
+        
+    </div>
   </div>
 
-  <!-- Tu script de ubicación -->
   <script src="ubicacion.js"></script>
   <script>
     // Prueba automática al cargar la página
@@ -49,5 +78,28 @@
       });
     });
   </script>
+
+
+  <script src="apiTicket.js"></script>
+  <script>
+    const listas = document.querySelectorAll(".lista");
+    listas.forEach((lista) => {
+        new Sortable(lista, {
+            group: "semana",
+            animation: 200,
+            ghostClass: "fantasma",
+            chosenClass: "elegida",
+            handle: ".asa",
+            onEnd: (evt) => {
+                console.log("Actividad:", evt.item.textContent);
+                console.log("De:", evt.from.id, "posición", evt.oldIndex);
+                console.log("A:", evt.to.id, "posición", evt.newIndex);
+            }
+
+        });
+        
+    }); 
+  </script>
+
 </body>
 </html>
