@@ -67,3 +67,24 @@ function obtenerUbicacionActual(callbackExito = null) {
     }
   );
 }
+
+
+
+/**
+ * Funcion auxiliar para actualizar el texto en el DOM
+ */
+function actualizarMensajeUbicacion(mensaje, esError = false) {
+  const contenedor = document.getElementById('textoUbicacion');
+  if (contenedor) {
+    contenedor.textContent = mensaje;
+    contenedor.style.color = esError ? '#e74c3c' : '#2ecc71';
+  }
+}
+
+// Escuchador de evento si el boton existe al cargar
+document.addEventListener('DOMContentLoaded', () => {
+  const btnUbicacion = document.getElementById('btnUbicacion');
+  if (btnUbicacion) {
+    btnUbicacion.addEventListener('click', () => obtenerUbicacionActual());
+  }
+});
