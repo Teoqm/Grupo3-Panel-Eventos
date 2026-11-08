@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prueba Módulo Ubicación - Mateo</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background-color: #f4f6f9;
+      padding: 20px;
+    }
+    .card-prueba {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 450px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    button {
+      background-color: #1e3a5f;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    #textoUbicacion { font-weight: 500; margin-top: 12px; }
+  </style>
+</head>
+<body>
+
+  <div class="card-prueba">
+    <h2>Prueba Módulo de Ubicación (Mateo)</h2>
+    <p>Haz clic para obtener la ubicación en tiempo real:</p>
+    <button id="btnUbicacion">Obtener Mi Ubicación</button>
+    <p id="textoUbicacion">Esperando interacción...</p>
+  </div>
+
+  <!-- Tu script de ubicación -->
+  <script src="ubicacion.js"></script>
+  <script>
+    // Prueba automática al cargar la página
+    window.addEventListener('load', () => {
+      obtenerUbicacionActual((datos) => {
+        console.log("Ubicación cargada con éxito para el resto del grupo:", datos);
+      });
+    });
+  </script>
+</body>
+</html>
