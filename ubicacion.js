@@ -16,7 +16,6 @@ const ubicacionUsuario = {
  * @param {Function} callbackExito - Funcion opcional que se ejecuta al obtener la ubicacion
  */
 function obtenerUbicacionActual(callbackExito = null) {
-  const elementoUbicacion = document.getElementById('textoUbicacion');
   const btnUbicacion = document.getElementById('btnUbicacion');
 
   if (!('geolocation' in navigator)) {
@@ -77,7 +76,7 @@ function actualizarMensajeUbicacion(mensaje, esError = false) {
   const contenedor = document.getElementById('textoUbicacion');
   if (contenedor) {
     contenedor.textContent = mensaje;
-    contenedor.style.color = esError ? '#e74c3c' : '#2ecc71';
+    contenedor.style.color = esError ? '#7f1d1d' : '#1e3a8a';
   }
 }
 

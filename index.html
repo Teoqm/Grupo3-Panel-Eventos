@@ -3,103 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de eventos - Grupo 3</title>
+  <link rel="stylesheet" href="estilos.css">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
-  <title>Prueba Módulo Ubicación - Mateo</title>
-  <style>
-    .tablero { display: flex; gap: 16px; flex-wrap: wrap;   }
-    .columna { background: #ddd; border-radius: 8px; padding: 10px; width: 220px; }
-    .columna h3 { margin: 0 0 8px; font-size: 1rem; }
-    .lista { list-style: none; padding: 0; margin: 0; min-height: 80px; }
-    .lista li { background: white; padding: 10px; margin-bottom: 6px;  border-radius: 6px; cursor: grab; }  
-    .fantasma { opacity: 0.4; background: #c8e6c9; }
-    .elegida { box-shadow: 0 6px 14px rgba(0,0,0,0.3); }
-    .asa { cursor: grab; color: #999; margin-right: 8px; }
-    body {
-      font-family: system-ui, sans-serif;
-      background-color: #f4f6f9;
-      padding: 20px;
-    }
-    .card-prueba {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 450px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    button {
-      background-color: #1e3a5f;
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:disabled { opacity: 0.6; cursor: not-allowed; }
-    #textoUbicacion { font-weight: 500; margin-top: 12px; }
-  </style>
 </head>
 <body>
 
-  <div class="card-prueba">
-    <h2>Prueba Módulo de Ubicación (Mateo)</h2>
-    <p>Haz clic para obtener la ubicación en tiempo real:</p>
-    <button id="btnUbicacion">Obtener Mi Ubicación</button>
-    <p id="textoUbicacion">Esperando interacción...</p>
-    <ul id="listaEventos"></ul>
-  
-  
-  </div>
-  <div class="tablero">
-    
-    <div class="columna">
-
-        <h3>Eventos</h3>
-        <ul class="lista" id="Eventos">
-            
-        </ul>
-
+  <!-- Encabezado: título del panel y tarjeta de ubicación -->
+  <header class="encabezado">
+    <div>
+      <h1>Panel de eventos</h1>
     </div>
-    <div class="columna" >
-        <h3>Interesado</h3>
-        <ul class="lista" id="interesado">
-            
-        </ul>
-        
-    </div>
-  </div>
+
+    <section class="widget-ubicacion" aria-label="Ubicación actual">
+      <h2>Tu ubicación actual</h2>
+      <p id="textoUbicacion">Esperando permiso de ubicación...</p>
+      <button id="btnUbicacion" type="button">Actualizar ubicación</button>
+    </section>
+  </header>
+
+  <!-- Cuerpo del dashboard: tres paneles -->
+  <main class="dashboard">
+
+    <section class="panel panel-eventos">
+      <div class="panel-cabecera">
+        <h2>Eventos</h2>
+        <span class="contador" id="contadorEventos">0</span>
+      </div>
+      <!-- Buscador: escribe una palabra y busca esos eventos en Ticketmaster -->
+      <form id="formBuscar" class="buscador">
+        <input id="inputBuscar" type="search" placeholder="Ej: rock, football, theater" required>
+        <button type="submit">Buscar</button>
+      </form>
+      <!-- Mensajes de carga o error (fuera de la lista para que no se puedan arrastrar) -->
+      <p class="estado" id="estadoEventos" role="status">Cargando eventos...</p>
+      <ul class="lista" id="eventos"></ul>
+    </section>
+
+    <section class="panel panel-interesados">
+      <div class="panel-cabecera">
+        <h2>Interesados</h2>
+        <span class="contador" id="contadorInteresados">0</span>
+      </div>
+      <p class="estado">Arrastra desde el ⠿ los eventos que te interesan.</p>
+      <ul class="lista" id="interesados"></ul>
+    </section>
+
+    <aside class="panel panel-grafica">
+      <div class="panel-cabecera">
+        <h2>Eventos seleccionados</h2>
+      </div>
+      <canvas id="grafica" width="300" height="240"></canvas>
+    </aside>
+
+  </main>
 
   <script src="ubicacion.js"></script>
-  <script>
-    // Prueba automática al cargar la página
-    window.addEventListener('load', () => {
-      obtenerUbicacionActual((datos) => {
-        console.log("Ubicación cargada con éxito para el resto del grupo:", datos);
-      });
-    });
-  </script>
-
-
+  <script src="canvas.js"></script>
   <script src="apiTicket.js"></script>
-  <script>
-    const listas = document.querySelectorAll(".lista");
-    listas.forEach((lista) => {
-        new Sortable(lista, {
-            group: "semana",
-            animation: 200,
-            ghostClass: "fantasma",
-            chosenClass: "elegida",
-            handle: ".asa",
-            onEnd: (evt) => {
-                console.log("Actividad:", evt.item.textContent);
-                console.log("De:", evt.from.id, "posición", evt.oldIndex);
-                console.log("A:", evt.to.id, "posición", evt.newIndex);
-            }
-
-        });
-        
-    }); 
-  </script>
-
+  <script src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,266 @@
+/* Variables CSS: se definen una vez aquí y se usan con var(--nombre) */
+:root {
+  --lavanda: #AEA1E8;      /* encabezado, Interesados, gráfica */
+  --periwinkle: #B9BCFC;   /* Eventos */
+  --lila-claro: #C1C2FF;   /* tarjeta de ubicación, hueco al arrastrar */
+  --lila-gris: #BFBFE2;    /* fondo de la página */
+  --gris: #B9BEC5;         /* bordes y detalles */
+
+  --tinta: #2b2650;
+  --tinta-suave: #5b567d;
+}
+
+/* Base  */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  background-color: var(--lila-gris);
+  color: var(--tinta);
+  line-height: 1.4;
+}
+
+h1 {
+  font-size: 1.8rem;
+}
+
+button {
+  background-color: var(--tinta);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #453e7a;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* Encabezado */
+.encabezado {
+  background-color: var(--lavanda);
+  color: var(--tinta);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+
+  @media (max-width: 600px) {
+    padding: 1rem;
+  }
+}
+
+.subtitulo {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tinta-suave);
+}
+
+/* Tarjeta de ubicación dentro del encabezado */
+.widget-ubicacion {
+  background-color: var(--lila-claro);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  min-width: 260px;
+
+  & h2 {
+    font-size: 0.85rem;
+    color: var(--tinta-suave);
+    margin-bottom: 0.25rem;
+  }
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+}
+
+/* El color de este texto lo pone ubicacion.js con style.color */
+#textoUbicacion {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Dashboard: 3 columnas */
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr 320px;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  align-items: start;
+
+  /* Tablet: la gráfica pasa abajo */
+  @media (max-width: 1000px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Celular: todo en una sola columna */
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+}
+
+/* Paneles */
+.panel {
+  background-color: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(43, 38, 80, 0.12);
+  border-top: 6px solid var(--periwinkle);
+}
+
+.panel-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+
+  & h2 {
+    font-size: 1.15rem;
+  }
+}
+
+/* Burbuja con el número de tarjetas */
+.contador {
+  background-color: var(--periwinkle);
+  color: var(--tinta);
+  font-weight: bold;
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+}
+
+/* Panel Interesados: cambia el borde, el contador y la lista */
+.panel-interesados {
+  border-top-color: var(--lavanda);
+
+  & .contador {
+    background-color: var(--lavanda);
+  }
+
+  & .lista {
+    border: 2px dashed var(--lavanda);
+    border-radius: 10px;
+    padding: 0.5rem;
+  }
+}
+
+.panel-grafica {
+  border-top-color: var(--gris);
+
+  @media (max-width: 1000px) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Buscador: input y botón en una sola fila */
+.buscador {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+
+  & input { 
+    flex: 1; /* el input ocupa todo el espacio que sobra */
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--gris);
+    border-radius: 6px;
+    font: inherit;
+  }
+}
+
+/* Mensajes de carga o error */
+.estado {
+  font-size: 0.85rem;
+  color: var(--tinta-suave);
+  margin-bottom: 0.75rem;
+
+  &.error {
+    color: #b91c1c;
+  }
+}
+
+/* Listas y tarjetas */
+.lista {
+  list-style: none;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* La lista de Eventos tiene su propio scroll para que el panel no baje tanto */
+#eventos {
+  max-height: 65vh;
+  overflow-y: auto;
+  padding-right: 0.3rem;
+}
+
+.tarjeta {
+  display: flex;
+  gap: 0.6rem;
+  background-color: #f4f4ff;
+  border: 1px solid var(--gris);
+  border-left: 5px solid var(--periwinkle);
+  border-radius: 8px;
+  padding: 0.7rem;
+
+  & h3 {
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+  }
+
+  & p {
+    font-size: 0.85rem;
+    color: var(--tinta-suave);
+  }
+
+  & a {
+    font-size: 0.8rem;
+    color: #4c3fa3;
+  }
+
+  /* Cuando la tarjeta está en Interesados cambia de color */
+  #interesados & {
+    border-left-color: var(--lavanda);
+    background-color: #f2effc;
+  }
+}
+
+.asa {
+  cursor: grab;
+  color: var(--tinta-suave);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* Clases que pone SortableJS mientras se arrastra */
+.fantasma {
+  opacity: 0.5;
+  background-color: var(--lila-claro);
+}
+
+.elegida {
+  box-shadow: 0 6px 14px rgba(43, 38, 80, 0.3);
+}
+
+/* Canvas */
+#grafica {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 0 auto;
+}
